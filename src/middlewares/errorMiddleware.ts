@@ -9,7 +9,8 @@ export function errorMiddleware(
 ) {
   if (error instanceof AppError) {
     return response.status(error.statusCode).json({
-      message: error.message
+      message: error.message,
+      ...(error.details && { errors: error.details })
     });
   }
 

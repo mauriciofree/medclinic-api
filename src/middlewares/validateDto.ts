@@ -18,7 +18,7 @@ export function validateDto<T extends object>(dtoClass: DtoClass<T>) {
         messages: Object.values(error.constraints ?? {})
       }));
 
-      throw new AppError(JSON.stringify(validationErrors), 400);
+      throw new AppError("Erro de validação.", 400, validationErrors);
     }
 
     request.body = dto;
