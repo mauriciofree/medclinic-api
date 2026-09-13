@@ -1,5 +1,6 @@
 import { CreateUserDTO } from "../dtos/CreateUserDTO";
 import { LoginDTO } from "../dtos/LoginDTO";
+import { LoginResponseDTO } from "../dtos/LoginResponseDTO";
 import { UserResponseDTO } from "../dtos/UserResponseDTO";
 import { UserRole } from "../entities/User";
 import { AppError } from "../errors/AppError";
@@ -7,11 +8,6 @@ import { UserRepository } from "../repositories/UserRepository";
 import { generateToken } from "../utils/jwt";
 import { comparePassword, hashPassword } from "../utils/passwordHash";
 import { UserService } from "./UserService";
-
-interface LoginResponse {
-  token: string;
-  user: UserResponseDTO;
-}
 
 export class AuthService {
   private userRepository: UserRepository;
@@ -41,7 +37,7 @@ export class AuthService {
     return this.userService.toResponseDTO(user);
   }
 
-  async login(data: LoginDTO): Promise<LoginResponse> {
+  async login(data: LoginDTO): Promise<LoginResponseDTO> {
     const user = await this.userRepository.findByEmail(data.email);
 
     if (!user) {
@@ -61,7 +57,12 @@ export class AuthService {
 
     return {
       token,
-      user: this.userService.toResponseDTO(user)
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     };
   }
 }
