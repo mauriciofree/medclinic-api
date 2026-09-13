@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { adminRoutes } from "./admin.routes";
 import { authRoutes } from "./auth.routes";
 import { userRoutes } from "./user.routes";
 
@@ -11,5 +12,6 @@ routes.get("/", (request, response) => {
   });
 });
 
+routes.use("/admin", adminRoutes);
 routes.use("/auth", authRoutes);
 routes.use("/users", userRoutes);
