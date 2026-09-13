@@ -57,7 +57,9 @@ Este projeto tem como objetivo praticar os conceitos estudados no Módulo 02 do 
 - Bcrypt
 - Dotenv
 - CORS
-- TSX ou ts-node-dev
+- Class Validator
+- Class Transformer
+- TSX
 - Git
 - GitHub
 
@@ -102,7 +104,7 @@ npm install
 Crie o banco de dados no PostgreSQL:
 
 ```bash
-psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE medclinic_api;"
+psql -h localhost -p 5432 -U postgres -c "CREATE DATABASE sctec_mauricio_medclinic_api;"
 ```
 
 Crie um arquivo `.env` na raiz do projeto com as configurações da aplicação, do banco de dados e do JWT:
@@ -114,15 +116,26 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
-DB_DATABASE=medclinic_api
+DB_DATABASE=sctec_mauricio_medclinic_api
+DB_SSL=false
 
-JWT_SECRET=sua_chave_secreta
+JWT_SECRET=troque_por_uma_chave_secreta_forte
 JWT_EXPIRES_IN=1d
 ```
 
 Caso utilize outra porta, usuário, senha ou nome de banco, ajuste os comandos e o arquivo `.env` com os mesmos dados do seu ambiente local.
 
-Depois de configurar o `.env`, execute as migrations do TypeORM ou o script SQL disponibilizado no projeto para criar a estrutura do banco de dados.
+Para gerar uma chave mais segura para o `JWT_SECRET`, utilize:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Depois de configurar o `.env`, execute o script SQL disponibilizado no projeto para criar a estrutura do banco de dados:
+
+```bash
+psql -h localhost -p 5432 -U postgres -d sctec_mauricio_medclinic_api -f src/database/schema.sql
+```
 
 ---
 
@@ -302,7 +315,15 @@ Exemplo de resposta:
 
 ```json
 {
-  "message": "Campos obrigatórios não informados."
+  "message": "Erro de validação.",
+  "errors": [
+    {
+      "field": "email",
+      "messages": [
+        "email must be an email"
+      ]
+    }
+  ]
 }
 ```
 
@@ -336,44 +357,54 @@ Exemplo de resposta:
 }
 ```
 
+```json
+{
+  "message": "Rota não encontrada."
+}
+```
+
 ---
 
 ## Estrutura do Projeto
 
 ```text
 src/
-├── server.ts
-├── routes/
-│   ├── auth.routes.ts
-│   ├── user.routes.ts
-│   ├── admin.routes.ts
-│   └── index.ts
-├── controllers/
-│   ├── AuthController.ts
-│   └── UserController.ts
-├── services/
-│   ├── AuthService.ts
-│   └── UserService.ts
-├── repositories/
-│   └── UserRepository.ts
-├── entities/
-│   └── User.ts
-├── middlewares/
-│   ├── authMiddleware.ts
-│   ├── roleMiddleware.ts
-│   └── errorMiddleware.ts
-├── database/
-│   ├── data-source.ts
-│   └── migrations/
-├── dtos/
-│   ├── CreateUserDTO.ts
-│   ├── LoginDTO.ts
-│   └── UserResponseDTO.ts
-├── errors/
-│   └── AppError.ts
-└── utils/
-    ├── passwordHash.ts
-    └── jwt.ts
+|-- server.ts
+|-- routes/
+|   |-- admin.routes.ts
+|   |-- auth.routes.ts
+|   |-- index.ts
+|   `-- user.routes.ts
+|-- controllers/
+|   |-- AuthController.ts
+|   `-- UserController.ts
+|-- services/
+|   |-- AuthService.ts
+|   `-- UserService.ts
+|-- repositories/
+|   `-- UserRepository.ts
+|-- entities/
+|   `-- User.ts
+|-- middlewares/
+|   |-- asyncHandler.ts
+|   |-- authMiddleware.ts
+|   |-- errorMiddleware.ts
+|   |-- notFoundMiddleware.ts
+|   |-- roleMiddleware.ts
+|   `-- validateDto.ts
+|-- database/
+|   |-- data-source.ts
+|   `-- schema.sql
+|-- dtos/
+|   |-- CreateUserDTO.ts
+|   |-- LoginDTO.ts
+|   |-- LoginResponseDTO.ts
+|   `-- UserResponseDTO.ts
+|-- errors/
+|   `-- AppError.ts
+`-- utils/
+    |-- jwt.ts
+    `-- passwordHash.ts
 ```
 
 Arquivos principais na raiz:
@@ -420,7 +451,7 @@ Contém middlewares de autenticação, autorização, validação e tratamento c
 
 ### database/
 
-Contém a configuração da conexão com PostgreSQL e as migrations ou scripts de criação da estrutura do banco de dados.
+Contém a configuração da conexão com PostgreSQL e o script SQL de criação da estrutura do banco de dados.
 
 ### dtos/
 
@@ -550,31 +581,31 @@ O vídeo de apresentação deverá ter entre 5 e 10 minutos e demonstrar:
 - [x] Criar repositório público no GitHub
 - [x] Criar branch `develop`
 - [x] Criar branch `feat/setup-projeto`
-- [ ] Configurar projeto Node.js com TypeScript
-- [ ] Criar `package.json`
-- [ ] Criar `tsconfig.json`
-- [ ] Criar `src/server.ts`
-- [ ] Configurar scripts de execução
-- [ ] Configurar Express
-- [ ] Configurar TypeORM com PostgreSQL
-- [ ] Criar arquivo `.env.example`
-- [ ] Criar migrations ou script SQL do banco de dados
-- [ ] Criar entidade de usuário
-- [ ] Criar DTOs
-- [ ] Implementar arquitetura em camadas
-- [ ] Implementar cadastro de usuários
-- [ ] Implementar criptografia de senha
-- [ ] Implementar login
-- [ ] Implementar geração de JWT
-- [ ] Implementar middleware de autenticação
-- [ ] Implementar middleware de autorização RBAC
-- [ ] Criar endpoint `GET /users/me`
-- [ ] Criar endpoint `GET /admin/ping`
-- [ ] Implementar validações de entrada
-- [ ] Implementar tratamento centralizado de erros
+- [x] Configurar projeto Node.js com TypeScript
+- [x] Criar `package.json`
+- [x] Criar `tsconfig.json`
+- [x] Criar `src/server.ts`
+- [x] Configurar scripts de execução
+- [x] Configurar Express
+- [x] Configurar TypeORM com PostgreSQL
+- [x] Criar arquivo `.env.example`
+- [x] Criar script SQL do banco de dados
+- [x] Criar entidade de usuário
+- [x] Criar DTOs
+- [x] Implementar arquitetura em camadas
+- [x] Implementar cadastro de usuários
+- [x] Implementar criptografia de senha
+- [x] Implementar login
+- [x] Implementar geração de JWT
+- [x] Implementar middleware de autenticação
+- [x] Implementar middleware de autorização RBAC
+- [x] Criar endpoint `GET /users/me`
+- [x] Criar endpoint `GET /admin/ping`
+- [x] Implementar validações de entrada
+- [x] Implementar tratamento centralizado de erros
 - [ ] Atualizar README.md com exemplos reais
-- [ ] Fazer commits semânticos
-- [ ] Usar branches mínimas exigidas
+- [x] Fazer commits semânticos
+- [x] Usar branches mínimas exigidas
 - [ ] Gravar vídeo de apresentação
 - [ ] Enviar link do GitHub no AVA
 - [ ] Enviar link do vídeo no AVA
