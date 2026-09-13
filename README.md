@@ -548,8 +548,8 @@ O vídeo de apresentação deverá ter entre 5 e 10 minutos e demonstrar:
 ## Checklist Final de Entrega
 
 - [x] Criar repositório público no GitHub
-- [ ] Criar branch `develop`
-- [ ] Criar branch `feat/setup-projeto`
+- [x] Criar branch `develop`
+- [x] Criar branch `feat/setup-projeto`
 - [ ] Configurar projeto Node.js com TypeScript
 - [ ] Criar `package.json`
 - [ ] Criar `tsconfig.json`
