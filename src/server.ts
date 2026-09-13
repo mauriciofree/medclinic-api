@@ -1,6 +1,8 @@
+import "reflect-metadata";
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
+import { AppDataSource } from "./database/data-source";
 import { routes } from "./routes";
 
 const app = express();
@@ -10,6 +12,12 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
+AppDataSource.initialize()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Servidor rodando em http://localhost:${port}`);
+    });
+  })
+  .catch((error: unknown) => {
+    console.error("Erro ao conectar com o banco de dados:", error);
+  });
