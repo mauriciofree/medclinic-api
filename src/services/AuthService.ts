@@ -1,10 +1,17 @@
 import { CreateUserDTO } from "../dtos/CreateUserDTO";
+import { LoginDTO } from "../dtos/LoginDTO";
 import { UserResponseDTO } from "../dtos/UserResponseDTO";
 import { UserRole } from "../entities/User";
 import { AppError } from "../errors/AppError";
 import { UserRepository } from "../repositories/UserRepository";
-import { hashPassword } from "../utils/passwordHash";
+import { generateToken } from "../utils/jwt";
+import { comparePassword, hashPassword } from "../utils/passwordHash";
 import { UserService } from "./UserService";
+
+interface LoginResponse {
+  token: string;
+  user: UserResponseDTO;
+}
 
 export class AuthService {
   private userRepository: UserRepository;
@@ -32,5 +39,29 @@ export class AuthService {
     });
 
     return this.userService.toResponseDTO(user);
+  }
+
+  async login(data: LoginDTO): Promise<LoginResponse> {
+    const user = await this.userRepository.findByEmail(data.email);
+
+    if (!user) {
+      throw new AppError("Credenciais inválidas.", 401);
+    }
+
+    const passwordMatches = await comparePassword(data.password, user.password);
+
+    if (!passwordMatches) {
+      throw new AppError("Credenciais inválidas.", 401);
+    }
+
+    const token = generateToken({
+      sub: user.id,
+      role: user.role
+    });
+
+    return {
+      token,
+      user: this.userService.toResponseDTO(user)
+    };
   }
 }
