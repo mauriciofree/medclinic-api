@@ -607,5 +607,5 @@ O vídeo de apresentação deverá ter entre 5 e 10 minutos e demonstrar:
 - [x] Fazer commits semânticos
 - [x] Usar branches mínimas exigidas
 - [x] Gravar vídeo de apresentação
-- [ ] Enviar link do GitHub no AVA
-- [ ] Enviar link do vídeo no AVA
+- [x] Enviar link do GitHub no AVA
+- [x] Enviar link do vídeo no AVA
