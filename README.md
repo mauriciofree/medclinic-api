@@ -6,7 +6,7 @@ GitHub: https://github.com/mauriciofree/medclinic-api
 
 ## Vídeo de Apresentação do Projeto
 
-Youtube: inserir link do vídeo
+Youtube: https://youtu.be/bYkeNFd0KNY
 
 ---
 
@@ -603,9 +603,9 @@ O vídeo de apresentação deverá ter entre 5 e 10 minutos e demonstrar:
 - [x] Criar endpoint `GET /admin/ping`
 - [x] Implementar validações de entrada
 - [x] Implementar tratamento centralizado de erros
-- [ ] Atualizar README.md com exemplos reais
+- [x] Atualizar README.md com exemplos reais
 - [x] Fazer commits semânticos
 - [x] Usar branches mínimas exigidas
-- [ ] Gravar vídeo de apresentação
+- [x] Gravar vídeo de apresentação
 - [ ] Enviar link do GitHub no AVA
 - [ ] Enviar link do vídeo no AVA
